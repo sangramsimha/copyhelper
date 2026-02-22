@@ -24,12 +24,20 @@ export default function Home() {
       });
 
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || `Server error: ${response.status}`);
+      }
+
       if (data.conversation) {
         router.push(`/chat/${data.conversation.id}`);
+      } else {
+        throw new Error('No conversation created');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating conversation:', error);
-      alert('Failed to start chat');
+      const errorMessage = error.message || 'Failed to start chat. Please check your browser console for details.';
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
     }

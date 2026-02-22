@@ -68,8 +68,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ conversation });
   } catch (error: any) {
     console.error('Create conversation error:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to create conversation';
+    if (error.code === 'P1001') {
+      errorMessage = 'Database connection failed. Please check your DATABASE_URL environment variable.';
+    } else if (error.code === 'P2002') {
+      errorMessage = 'A conversation with this description already exists.';
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
     return NextResponse.json(
-      { error: error.message || 'Failed to create conversation' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
