@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
@@ -8,11 +9,11 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    const where = search
+    const where: Prisma.ConversationWhereInput = search
       ? {
           OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { productDescription: { contains: search, mode: 'insensitive' } },
+            { title: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { productDescription: { contains: search, mode: Prisma.QueryMode.insensitive } },
           ],
         }
       : {};
