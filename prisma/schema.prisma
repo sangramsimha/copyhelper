@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Using PostgreSQL for Supabase (works for both local and production)
+  url      = env("DATABASE_URL")
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  title       String?
+  productDescription String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  messages    Message[]
+  ideas       Idea[]
+  
+  @@index([createdAt])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String   // "user" or "assistant"
+  content        String
+  messageType    String?  // "idea_generation" or "evaluation"
+  createdAt      DateTime @default(now())
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
+model Idea {
+  id             String   @id @default(cuid())
+  conversationId String
+  content        String
+  frameworkUsed  String?  // Which framework was used to generate this
+  createdAt      DateTime @default(now())
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  evaluations    Evaluation[]
+  
+  @@index([conversationId])
+}
+
+model Evaluation {
+  id             String   @id @default(cuid())
+  ideaId         String
+  checklistScores String?  // Store scores for each criterion (JSON string)
+  overallScore   Float?
+  notes          String?
+  createdAt      DateTime @default(now())
+  
+  idea           Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  
+  @@index([ideaId])
+}
