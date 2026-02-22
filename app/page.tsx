@@ -10,12 +10,16 @@ export default function Home() {
   const router = useRouter();
 
   const handleStartChat = async () => {
+    console.log('Button clicked!', { productDescription: productDescription.trim() });
+    
     if (!productDescription.trim()) {
       alert('Please enter a product description');
       return;
     }
 
     setIsLoading(true);
+    console.log('Starting API call to /api/conversations...');
+    
     try {
       const response = await fetch('/api/conversations', {
         method: 'POST',
@@ -23,13 +27,16 @@ export default function Home() {
         body: JSON.stringify({ productDescription }),
       });
 
+      console.log('Response status:', response.status, response.statusText);
       const data = await response.json();
+      console.log('Response data:', data);
       
       if (!response.ok) {
         throw new Error(data.error || `Server error: ${response.status}`);
       }
 
       if (data.conversation) {
+        console.log('Conversation created, navigating to:', `/chat/${data.conversation.id}`);
         router.push(`/chat/${data.conversation.id}`);
       } else {
         throw new Error('No conversation created');
