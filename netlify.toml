@@ -7,3 +7,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  PRISMA_GENERATE_DATAPROXY = "false"
+
+[functions]
+  node_bundler = "esbuild"
