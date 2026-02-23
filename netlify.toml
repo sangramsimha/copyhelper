@@ -9,6 +9,7 @@
   NODE_VERSION = "18"
   PRISMA_GENERATE_DATAPROXY = "false"
   PRISMA_CLI_QUERY_ENGINE_TYPE = "binary"
+  PRISMA_CLIENT_ENGINE_TYPE = "binary"
 
 [functions]
   node_bundler = "esbuild"
