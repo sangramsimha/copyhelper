@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prisma:clean": "rm -rf node_modules/.prisma node_modules/@prisma/client || true",
-    "prisma:generate": "prisma generate --no-engine",
+    "prisma:generate": "prisma generate",
     "prisma:check": "node scripts/check-prisma.js",
     "build": "npm run prisma:clean && npm run prisma:generate && npm run prisma:check && next build",
     "start": "next start",
